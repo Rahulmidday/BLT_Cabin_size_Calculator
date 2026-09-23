@@ -1,15 +1,34 @@
+// Theme Toggle Logic
+const themeToggleBtn = document.getElementById('theme_toggle');
+const body = document.body;
+
+// Check local storage for saved theme preference
+const savedTheme = localStorage.getItem('theme');
+if (savedTheme === 'dark') {
+    body.classList.add('dark-mode');
+}
+
+themeToggleBtn.addEventListener('click', () => {
+    body.classList.toggle('dark-mode');
+    
+    // Save preference to local storage
+    if (body.classList.contains('dark-mode')) {
+        localStorage.setItem('theme', 'dark');
+    } else {
+        localStorage.setItem('theme', 'light');
+    }
+});
+
+// Calculator Logic (Same as previous)
 function calculateCabin() {
-    // UI Elements
     const resultsContainer = document.getElementById('results_container');
     const errorContainer = document.getElementById('error_container');
     const emptyState = document.getElementById('empty_state');
     
-    // Hide previous states
     errorContainer.classList.add('hidden');
     resultsContainer.classList.add('hidden');
     emptyState.classList.add('hidden');
 
-    // 1. Get Inputs
     const shaftWidth = parseFloat(document.getElementById('shaft_width').value);
     const shaftDepth = parseFloat(document.getElementById('shaft_depth').value);
     const counterType = parseInt(document.getElementById('counter_type').value);
@@ -22,7 +41,6 @@ function calculateCabin() {
 
     let tol_left, tol_right, tol_back, tol_front;
 
-    // 2. Tolerance Logic (Matched exactly to provided JS)
     if (counterType === 2) {
         if (doorType === 1) {
             tol_left = 185 + 30;
@@ -55,12 +73,10 @@ function calculateCabin() {
         showError("Invalid counter type selection."); return;
     }
 
-    // 3. Cabin Dimensions
     let cabin_width = shaftWidth - (tol_left + tol_right);
     let original_cabin_depth = shaftDepth - (tol_back + tol_front);
     let cabin_depth = original_cabin_depth;
 
-    // 4. Doors Calculation
     let doorsAvailable = [];
     let doorTitle = "";
     if (doorType === 1) {
@@ -79,11 +95,9 @@ function calculateCabin() {
         if (shaftWidth >= (600 * 1.5 + 200)) doorsAvailable.push("600 mm");
     }
 
-    // 5. Area & Passenger Calculation
     let cabin_inside_area = cabin_width * cabin_depth;
     let paxStr = "";
     let depthReduction = 0;
-
     const areaBase = cabin_width * cabin_depth;
     const M = 1000000;
 
@@ -181,13 +195,11 @@ function calculateCabin() {
         showError("The provided shaft size is too large for a standard cabin."); return;
     }
 
-    // Populate Results UI
     document.getElementById('res_width').innerText = cabin_width.toFixed(2) + ' mm';
     document.getElementById('res_depth').innerText = cabin_depth.toFixed(2) + ' mm';
     document.getElementById('res_area').innerText = (cabin_inside_area / M).toFixed(2) + ' M²';
     document.getElementById('res_pax').innerText = paxStr;
     
-    // Handle Reduction Text
     const redText = document.getElementById('res_reduction');
     const redAreaText = document.getElementById('res_reduced_area');
     if (depthReduction > 0) {
@@ -200,7 +212,6 @@ function calculateCabin() {
         redAreaText.classList.add('hidden');
     }
 
-    // Populate Doors UI
     document.getElementById('door_title').innerText = doorTitle;
     const doorsUl = document.getElementById('res_doors');
     doorsUl.innerHTML = '';
@@ -211,10 +222,17 @@ function calculateCabin() {
             doorsUl.appendChild(li);
         });
     } else {
-        doorsUl.innerHTML = '<li style="background:#fef2f2; color:#b91c1c;">Shaft width too small for standard doors.</li>';
+        const errorLi = document.createElement('li');
+        errorLi.innerText = 'Shaft width too small for standard doors.';
+        // Apply inline styles for the error state in dark/light mode
+        if (document.body.classList.contains('dark-mode')) {
+            errorLi.style.cssText = 'background-color: #7f1d1d20; color: #fca5a5;';
+        } else {
+            errorLi.style.cssText = 'background-color: #fef2f2; color: #b91c1c;';
+        }
+        doorsUl.appendChild(errorLi);
     }
 
-    // Show results
     resultsContainer.classList.remove('hidden');
 }
 
