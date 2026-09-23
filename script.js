@@ -1,25 +1,36 @@
-// Theme Toggle Logic
-const themeToggleBtn = document.getElementById('theme_toggle');
+// Theme Toggle Slider Logic
+const themeCheckbox = document.getElementById('theme_checkbox');
 const body = document.body;
 
 // Check local storage for saved theme preference
 const savedTheme = localStorage.getItem('theme');
 if (savedTheme === 'dark') {
     body.classList.add('dark-mode');
+    themeCheckbox.checked = true;
 }
 
-themeToggleBtn.addEventListener('click', () => {
-    body.classList.toggle('dark-mode');
-    
-    // Save preference to local storage
-    if (body.classList.contains('dark-mode')) {
+themeCheckbox.addEventListener('change', () => {
+    if (themeCheckbox.checked) {
+        body.classList.add('dark-mode');
         localStorage.setItem('theme', 'dark');
     } else {
+        body.classList.remove('dark-mode');
         localStorage.setItem('theme', 'light');
+    }
+    
+    // Update the error text color instantly if it's currently showing
+    const errorUl = document.getElementById('res_doors');
+    if (errorUl && errorUl.innerHTML.includes('Shaft width too small')) {
+        const errorLi = errorUl.querySelector('li');
+        if (themeCheckbox.checked) {
+            errorLi.style.cssText = 'background-color: #7f1d1d20; color: #fca5a5;';
+        } else {
+            errorLi.style.cssText = 'background-color: #fef2f2; color: #b91c1c;';
+        }
     }
 });
 
-// Calculator Logic (Same as previous)
+// Calculator Logic
 function calculateCabin() {
     const resultsContainer = document.getElementById('results_container');
     const errorContainer = document.getElementById('error_container');
@@ -224,7 +235,6 @@ function calculateCabin() {
     } else {
         const errorLi = document.createElement('li');
         errorLi.innerText = 'Shaft width too small for standard doors.';
-        // Apply inline styles for the error state in dark/light mode
         if (document.body.classList.contains('dark-mode')) {
             errorLi.style.cssText = 'background-color: #7f1d1d20; color: #fca5a5;';
         } else {
