@@ -1,1 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lift Cabin Size Calculator</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
 
+    <div class="calculator-container">
+        
+        <!-- Input Section -->
+        <div class="input-panel">
+            <h1 class="title">Lift Cabin Size Calculator</h1>
+            <p class="subtitle">Enter shaft dimensions in millimeters. Designed for max 15 passenger capacity.</p>
+
+            <div class="form-group">
+                <label>Shaft Width (mm)</label>
+                <input type="number" id="shaft_width" placeholder="e.g. 1500">
+            </div>
+
+            <div class="form-group">
+                <label>Shaft Depth (mm)</label>
+                <input type="number" id="shaft_depth" placeholder="e.g. 1500">
+            </div>
+
+            <div class="form-group">
+                <label>Counter Type</label>
+                <select id="counter_type">
+                    <option value="1">Back Counter</option>
+                    <option value="2">Side Counter</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Door Type</label>
+                <select id="door_type">
+                    <option value="1">Center Opening Door</option>
+                    <option value="2">Telescopic Opening Door</option>
+                </select>
+            </div>
+
+            <button onclick="calculateCabin()" class="btn-calculate">
+                Calculate Dimensions
+            </button>
+        </div>
+
+        <!-- Results Section -->
+        <div class="results-panel">
+            <h2 class="results-title">Calculation Results</h2>
+            
+            <div id="results_container" class="hidden">
+                <!-- Cabin Dimensions -->
+                <div class="result-card card-blue">
+                    <h3>Cabin Dimensions</h3>
+                    <div class="row">
+                        <span>Cabin Width:</span>
+                        <span id="res_width" class="val"></span>
+                    </div>
+                    <div class="row">
+                        <span>Cabin Depth:</span>
+                        <span id="res_depth" class="val"></span>
+                    </div>
+                </div>
+
+                <!-- Area Analysis -->
+                <div class="result-card card-gray">
+                    <h3>Area Analysis</h3>
+                    <p>Inside Area: <span id="res_area" class="val"></span></p>
+                    <p id="res_reduction" class="text-warning hidden"></p>
+                    <p id="res_reduced_area" class="hidden mt-1">Reduced Area: <span class="val"></span></p>
+                </div>
+
+                <!-- Passenger Capacity -->
+                <div class="result-card card-green pax-card">
+                    <div>
+                        <h3>Capacity</h3>
+                        <p id="res_pax" class="pax-val"></p>
+                    </div>
+                </div>
+
+                <!-- Available Door Sizes -->
+                <div class="doors-section">
+                    <h3 id="door_title">Available Doors</h3>
+                    <ul id="res_doors" class="door-list"></ul>
+                </div>
+            </div>
+
+            <!-- Error State -->
+            <div id="error_container" class="error-msg hidden"></div>
+
+            <!-- Empty State -->
+            <div id="empty_state" class="empty-state">
+                <p>Enter shaft dimensions and click calculate to view results here.</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
